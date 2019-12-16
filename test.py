@@ -7,6 +7,7 @@ class Node:
     def __init__(self, data, next_node=None):
         self.data = data
         self.next_node = next_node
+        self.probability = 0
 
     def get_data(self):
         return self.data
@@ -19,6 +20,12 @@ class Node:
 
     def set_next_node(self, val):
         self.next_node = val
+
+    def get_probability(self):
+        return self.probability
+
+    def set_probability(self, val):
+        self.probability = val
 
 
 class LinkedList:
@@ -84,6 +91,24 @@ class LinkedList:
             all_list.append(curr.get_data())
             curr = curr.get_next_node()
         return all_list
+
+    def find_probability(self, value):
+        curr = self.head
+        while curr:
+            if curr.get_data() == value:
+                return curr.get_probability()
+            curr = curr.get_next_node()
+        return 0
+
+
+def update_probability(list):
+    curr = list.head
+    index = 0
+    n = len(list.get_list())-1
+    while curr:
+        curr.set_probability(index/n)
+        index = index + 1
+        curr = curr.get_next_node()
 
 
 class TrieNode(object):
@@ -216,6 +241,11 @@ def is_in_list(root_node, prefix: str):
     return True
 
 
+def change_point_probability():
+
+    return
+
+
 def find_weight(root_node, prefix: str):
     """
     Check and return
@@ -275,34 +305,34 @@ def update_list(linked_list, str, context_len):
                 in_list, weight = find_prefix(root, str[j:len(str)] + i)
 
                 if weight == max_weight:
-                    print(str[j:len(str)] + i, weight)
+                    #print(str[j:len(str)] + i, weight)
                     f = f + 1
                     candid_items.append(i)
                 if max_weight < weight:
-                    print(str[j:len(str)] + i, weight)
+                    #print(str[j:len(str)] + i, weight)
                     f = 1
                     max_weight = weight
                     candid_items = []
                     candid_items.append(i)
-            print("adding and removing ", str[j])
+            #print("adding and removing ", str[j])
             linked_list.remove_node(str[j])
             linked_list.add_node(str[j])
         else:
             # sort items by number of occurance
-            print("candid_items before :", candid_items)
+            #print("candid_items before :", candid_items)
             bubble_sort(candid_items)
-            print("candid_items after", candid_items)
+            #print("candid_items after", candid_items)
             # when swapping items in the list in a function the actual list changes
 
         if f == 1:  # age candid_items 1 item dasht
             j = j + 1
             while j < len(str):
-                print("adding and removing ", str[j])
+                #print("adding and removing ", str[j])
                 linked_list.remove_node(str[j])
                 linked_list.add_node(str[j])
                 j = j + 1
-            print(" i is : ", candid_items[0])
-            print("adding and removing ", candid_items[0])
+            #print(" i is : ", candid_items[0])
+            #print("adding and removing ", candid_items[0])
             linked_list.remove_node(candid_items[0])
             linked_list.add_node(candid_items[0])
             candid_items = []
@@ -315,7 +345,7 @@ def update_list(linked_list, str, context_len):
     # the last item is new or previously seen
 
     for candid in candid_items:
-        print("adding and removing", candid)
+        #print("adding and removing", candid)
         linked_list.remove_node(candid)
         linked_list.add_node(candid)
 
@@ -324,7 +354,7 @@ def contextbased_listupdate(root_node, str, context_len):
 
     for i in range(context_len):
         substr = str[i:context_len]
-        print(substr)
+        #print(substr)
         _add(root_node, substr)
 
     for j in range(context_len, len(str)):
@@ -332,8 +362,18 @@ def contextbased_listupdate(root_node, str, context_len):
             substr = str[j - context_len + 1 + k: j + 1]
             add(root_node, substr)
 
-        update_list(myList, str[j - context_len + 1: j + 1], context_len)
+        print("**************list before******************")
         myList.print_node()
+        update_list(myList, str[j - context_len + 1: j + 1], context_len)
+        print("probability of ",str[j], " of being a change point is : ", myList.find_probability(str[j]))
+        print("********adding node********")
+        print("string is ", str[j - context_len + 1: j + 1])
+        print("node is : ", str[j])
+        print("**************list after******************")
+        myList.print_node()
+        update_probability(myList)
+        #str[j]
+        #myList.print_node()
 
 
 if __name__ == "__main__":

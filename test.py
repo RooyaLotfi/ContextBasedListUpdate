@@ -7,7 +7,6 @@ class Node:
     def __init__(self, data, next_node=None):
         self.data = data
         self.next_node = next_node
-        self.probability = 0
 
     def get_data(self):
         return self.data
@@ -20,12 +19,6 @@ class Node:
 
     def set_next_node(self, val):
         self.next_node = val
-
-    def get_probability(self):
-        return self.probability
-
-    def set_probability(self, val):
-        self.probability = val
 
 
 class LinkedList:
@@ -92,23 +85,15 @@ class LinkedList:
             curr = curr.get_next_node()
         return all_list
 
-    def find_probability(self, value):
+    def get_index(self, value):
+        index = 0
         curr = self.head
         while curr:
             if curr.get_data() == value:
-                return curr.get_probability()
+                return index
             curr = curr.get_next_node()
-        return 0
-
-
-def update_probability(list):
-    curr = list.head
-    index = 0
-    n = len(list.get_list())-1
-    while curr:
-        curr.set_probability(index/n)
-        index = index + 1
-        curr = curr.get_next_node()
+            index = index + 1
+        return "not exist"
 
 
 class TrieNode(object):
@@ -241,11 +226,6 @@ def is_in_list(root_node, prefix: str):
     return True
 
 
-def change_point_probability():
-
-    return
-
-
 def find_weight(root_node, prefix: str):
     """
     Check and return
@@ -352,6 +332,7 @@ def update_list(linked_list, str, context_len):
 
 def contextbased_listupdate(root_node, str, context_len):
 
+    change_point = []
     for i in range(context_len):
         substr = str[i:context_len]
         #print(substr)
@@ -364,16 +345,18 @@ def contextbased_listupdate(root_node, str, context_len):
 
         print("**************list before******************")
         myList.print_node()
+        print("index for node ", str[j], " is ", myList.get_index(str[j]))
+        change_point.append(myList.get_index(str[j]))
         update_list(myList, str[j - context_len + 1: j + 1], context_len)
-        print("probability of ",str[j], " of being a change point is : ", myList.find_probability(str[j]))
         print("********adding node********")
         print("string is ", str[j - context_len + 1: j + 1])
         print("node is : ", str[j])
         print("**************list after******************")
         myList.print_node()
-        update_probability(myList)
         #str[j]
         #myList.print_node()
+
+    return change_point
 
 
 if __name__ == "__main__":
@@ -385,7 +368,9 @@ if __name__ == "__main__":
     str = "aababcab"
 
     index = 3
-    contextbased_listupdate(root, str, index)
+    x = contextbased_listupdate(root, str, index)
+
+    print(x)
 
     # print(find_weight(root,"ab"))
     # myList.print_node()
